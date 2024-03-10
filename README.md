@@ -1,7 +1,7 @@
 # ICache
-分布式缓存系统
+分布式缓存
 
-From https://geektutu.com/post/geecache-day1.html
+base: geektutu
 
 ### 简介
 
