@@ -11,7 +11,7 @@ From https://geektutu.com/post/geecache-day1.html
 4. 增加了grpc进行通信
 5. 使用etcd做服务注册和服务发现
 
-创建一个缓存Group命名为 `MyCache`, 缓存大小2字节, 如果缓存不存在, 在`geecache.GetterFunc()`中定义如何获取待缓存的数据，这里就直接在字典中获取
+创建一个缓存Group命名为 `scores`, 缓存大小2字节, 如果缓存不存在, 在`geecache.GetterFunc()`中定义如何获取待缓存的数据，这里就直接在字典中获取
 ``` go
 func createGroup() *geecache.Group {
 	return geecache.NewGroup("scores", 2<<10, "lru", geecache.GetterFunc( //lru算法做测试
