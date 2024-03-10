@@ -1,12 +1,12 @@
 package geecache
 
 import (
-	"Geecache/geecache/consistenthash"
-	pb "Geecache/geecache/geecachepb"
-	"Geecache/geecache/registry"
 	"context"
 	"fmt"
 	"google.golang.org/protobuf/proto"
+	"icache/consistenthash"
+	pb "icache/geecachepb"
+	"icache/registry"
 	"log"
 	"net"
 	"strings"

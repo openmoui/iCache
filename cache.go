@@ -1,8 +1,8 @@
 package geecache
 
 import (
-	"Geecache/geecache/lfu"
-	"Geecache/geecache/lru"
+	"icache/lfu"
+	"icache/lru"
 	"sync"
 	"time"
 )

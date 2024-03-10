@@ -1,68 +1,33 @@
-# Geecache
-本项目是基于极客兔兔的[分布式缓存GeeCache](https://geektutu.com/post/geecache.html)的基础上进行编写的。
+# ICache
+分布式缓存系统
 
+From https://geektutu.com/post/geecache-day1.html
 
+### 简介
 
-
-
-### 结构目录
-
-```latex
-│  go.mod
-│  go.sum
-│  main.go	main函数,用于测试
-│  README.md	MD文档
-│  run.bat	windows下测试
-│  run.sh	Linux下测试
-│
-└─geecache
-    │  byteview.go	缓存值的抽象与封装
-    │  cache.go	并发控制
-    │  geecache.go	负责与外部交互，控制缓存存储和获取的主流程
-    │  geecache_test.go 			
-    │  peers.go	抽象 PeerPicker
-    │  grpc.go	Server和Client的实现
-    │
-    ├─consistenthash
-    │      consistenthash.go	一致性哈希算法
-    │      consistenthash_test.go	
-    │
-    ├─geecachepb
-    │      geecachepb.pb.go
-    │      geecachepb.proto	protobuf文件
-    │      geecachepb_grpc.pb.go
-    │
-    ├─lfu
-    │      lfu.go	LFU算法
-    │      lfu_test.go
-    │
-    ├─lru
-    │      lru.go	LRU算法
-    │      lru_test.go
-    │
-    ├─registry	
-    │      discover.go	服务发现
-    │      register.go	服务注册
-    │
-    └─singleflight
-            singleflight.go	防止缓存击穿
-            singleflight_test.go
-```
-
-
-
-
-
-### 项目改进
-
-1. 实现lfu算法和lru算法两种缓存淘汰策略。
-2. 加入热点缓存hotCache
+1. 采用LRU 缓存淘汰算法。
+2. 支持高防缓存击穿
 3. 设置ttl和惰性删除
 4. 增加了grpc进行通信
 5. 使用etcd做服务注册和服务发现
 
+创建一个缓存Group命名为 `MyCache`, 缓存大小2字节, 如果缓存不存在, 在`geecache.GetterFunc()`中定义如何获取待缓存的数据，这里就直接在字典中获取
+``` go
+func createGroup() *geecache.Group {
+	return geecache.NewGroup("scores", 2<<10, "lru", geecache.GetterFunc( //lru算法做测试
+		func(key string) ([]byte, error) {
+			log.Println("[SlowDB] Search key", key)
+			if v, ok := db[key]; ok {
+				return []byte(v), nil
+			}
+			return nil, fmt.Errorf("%s not exist", key)
+		}))
+}
+```
 
+缓存结果获取
+``` bash
+# http://localhost:9999/api?key=Tom
+```
+如果缓存中有就直接返回,如果缓存中没有。从slow db中取，如果slow db没有就返回空。
 
-
-
-[项目GeeCache面试题(个人版，可能不够全面)](https://zhouxing9454.github.io/2023/10/23/项目GeeCache面试题/)

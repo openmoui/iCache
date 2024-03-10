@@ -1,6 +1,6 @@
 package geecache
 
-import pb "Geecache/geecache/geecachepb"
+import pb "icache/geecachepb"
 
 type PeerPicker interface {
 	PickPeer(key string) (peer PeerGetter, ok bool)
